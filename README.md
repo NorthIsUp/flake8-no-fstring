@@ -4,7 +4,7 @@ flake8-no-unnecessary-fstrings
 [![PyPI](https://img.shields.io/pypi/v/flake8-no-unnecessary-fstrings.svg)](https://pypi.python.org/pypi/flake8-no-unnecessary-fstrings)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
-A `flake8 <https://flake8.readthedocs.io/en/latest/index.html>`_ plugin to detect
+A [flake8](https://flake8.readthedocs.io/en/latest/index.html>) plugin to detect
 f-strings that don't actually do any interpolation.
 
 Installation
@@ -16,7 +16,7 @@ Install from ``pip`` with:
 python -m pip install flake8-no-unnecessary-fstrings
 ```
 
-Python 3.6 to 3.8 supported.
+Python 3.6+ supported.
 
 When installed it will automatically be run as part of ``flake8``; you can
 check it is being picked up with:
@@ -28,8 +28,4 @@ $ flake8 --version
 
 Rules
 -----
-
-NUF001: No unecessary f-strings
-~~~~~~~~~~~~~~~~~~
-
-Complains about f-strings.
+- **NUF001**: No unecessary f-strings
