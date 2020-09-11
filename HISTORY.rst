@@ -2,6 +2,11 @@
 History
 =======
 
+2.0 (2020-09-11)
+----------------
+* forked from https://github.com/seporaitis/flake8-no-fstring to make the `flake8-no-unnecessary-fstrings`
+* ``NUF001`` rule that complains about unecessary fstrings
+
 1.0.3 (2020-03-20)
 ------------------
 
