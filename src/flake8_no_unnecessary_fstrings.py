@@ -9,7 +9,7 @@ else:
 
 class NoUnnecessaryFstringChecker(object):
     """
-    A flake8 plugin to ban f-strings.
+    A flake8 plugin to ban unnecessary f-strings.
     """
 
     name = "flake8-no-unnecessary-fstrings"
