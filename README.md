@@ -3,6 +3,7 @@ flake8-no-unnecessary-fstrings
 
 [![PyPI](https://img.shields.io/pypi/v/flake8-no-unnecessary-fstrings.svg)](https://pypi.python.org/pypi/flake8-no-unnecessary-fstrings)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
+![Upload Python Package](https://github.com/NorthIsUp/flake8-no-unecessary-fstrings/workflows/Upload%20Python%20Package/badge.svg)
 
 A [flake8](https://flake8.readthedocs.io/en/latest/index.html>) plugin to detect
 f-strings that don't actually do any interpolation.
