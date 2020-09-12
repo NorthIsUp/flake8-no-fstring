@@ -1,7 +1,7 @@
 import sys
+from inspect import cleandoc
 
 import pytest
-from inspect import cleandoc
 
 if sys.version_info >= (3, 8):
     from importlib.metadata import version
@@ -60,6 +60,8 @@ class Scenario:
 scenarios = [
     Scenario("singlequote", "f''", should=FAIL),
     Scenario("doublequote", 'f""', should=FAIL),
+    Scenario("doublequote", 'f""""""', should=FAIL),
+    Scenario("doublequote", "f''''''", should=FAIL),
     Scenario("braces", '"{}"', should=PASS),
     Scenario("braces", '"{{}}"', should=PASS),
     Scenario("braces", '"{{}}".format(1)', should=PASS),
