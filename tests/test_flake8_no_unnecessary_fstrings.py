@@ -60,6 +60,8 @@ class Scenario:
 scenarios = [
     Scenario("singlequote", "f''", should=FAIL),
     Scenario("doublequote", 'f""', should=FAIL),
+    Scenario("doublequote", 'f""""""', should=FAIL),
+    Scenario("doublequote", "f''''''", should=FAIL),
     Scenario("braces", '"{}"', should=PASS),
     Scenario("braces", '"{{}}"', should=PASS),
     Scenario("braces", '"{{}}".format(1)', should=PASS),
