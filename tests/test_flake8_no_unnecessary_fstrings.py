@@ -1,7 +1,7 @@
 import sys
+from inspect import cleandoc
 
 import pytest
-from inspect import cleandoc
 
 if sys.version_info >= (3, 8):
     from importlib.metadata import version
