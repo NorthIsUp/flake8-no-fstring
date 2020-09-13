@@ -1,6 +1,6 @@
 import sys
 from inspect import cleandoc
-from typing import Sequence, Tuple
+from typing import Optional, Sequence, Tuple, Union
 
 import pytest
 
@@ -23,23 +23,28 @@ def test_version(flake8dir):
 # assert helpers
 
 
-PASS = object()
-FAIL = object()
-
-
 class Scenario:
     msg = "NUF001 f-string without interpolation."
 
-    def __init__(self, name, python, should=None, expects=None, xfail=False) -> None:
+    PASS = "PASS"
+    FAIL = "FAIL"
+
+    should = None
+
+    def __init__(
+        self,
+        name: str,
+        python: str,
+        expects: Optional[Sequence] = None,
+        xfail: Union[str, bool] = False,
+    ) -> None:
         self.name = name
         self.python = cleandoc(python)
-        self.should = should
         self.xfail = xfail
 
-        if should is PASS:
+        if self.should is self.PASS:
             expects = expects or ()
-
-        if should is FAIL:
+        elif self.should is self.FAIL:
             expects = expects or (self.expects_msg(),)
 
         self.expects = expects or ()
@@ -49,7 +54,7 @@ class Scenario:
 
     @property
     def test_name(self) -> str:
-        prefix = "allow" if self.should is PASS else "disallow"
+        prefix = "allow" if self.should is self.PASS else "disallow"
         return f"{prefix} {self.name}"
 
     @classmethod
@@ -57,29 +62,36 @@ class Scenario:
         return f"./example.py:{line}:{col}: {cls.msg}"
 
     @classmethod
-    def expects_msgs(cls, *lines_cols: Sequence[Tuple[int, int]]):
+    def expects_msgs(cls, *lines_cols: Tuple[int, int]):
         return [cls.expects_msg(l, c) for (l, c) in lines_cols]
+
+
+class PassingScenario(Scenario):
+    should = Scenario.PASS
+
+
+class FailingScenario(Scenario):
+    should = Scenario.FAIL
 
 
 # NUF001
 
 scenarios = [
-    Scenario("singlequote", "f''", should=FAIL),
-    Scenario("doublequote", 'f""', should=FAIL),
-    Scenario("doublequote", 'f""""""', should=FAIL),
-    Scenario("doublequote", "f''''''", should=FAIL),
-    Scenario("braces", '"{}"', should=PASS),
-    Scenario("braces", '"{{}}"', should=PASS),
-    Scenario("braces", '"{{}}".format(1)', should=PASS),
-    Scenario(
+    FailingScenario("singlequote", "f''"),
+    FailingScenario("doublequote", 'f""'),
+    FailingScenario("doublequote", 'f""""""'),
+    FailingScenario("doublequote", "f''''''"),
+    PassingScenario("braces", '"{}"'),
+    PassingScenario("braces", '"{{}}"'),
+    PassingScenario("braces", '"{{}}".format(1)'),
+    PassingScenario(
         "formatted value",
         """
         thing = 1
         f"{thing}"
         """,
-        should=PASS,
     ),
-    Scenario(
+    PassingScenario(
         "multiline formatted value",
         """
         asdf = 1
@@ -88,20 +100,18 @@ scenarios = [
             f"{asdf}"
         )
         """,
-        should=PASS,
     ),
-    Scenario(
+    FailingScenario(
         "multiline formatted value",
         """
         (
             "thing"
             f"asdf"
         )""",
-        should=FAIL,
         expects=[Scenario.expects_msg(2, 5)],
     ),
-    Scenario("regular format", '"{val}".format(1)', should=PASS),
-    Scenario(
+    PassingScenario("regular format", '"{val}".format(1)'),
+    PassingScenario(
         "inner format string '.3f'",
         """
         import time
@@ -111,24 +121,28 @@ scenarios = [
         f"{0.123456789:.3f}"
         f'Took {import_end - import_start:.3f} to import {cmd_name}'
         """,
-        should=PASS,
     ),
-    Scenario(
+    FailingScenario(
         "double bad strings",
         """
         f''
         f''
         """,
-        should=FAIL,
         expects=[Scenario.expects_msg(1, 1), Scenario.expects_msg(2, 1)],
     ),
-    Scenario(
-        "?",
+    FailingScenario(
+        "nested fstrings with no format",
         """
         f"{f''}"
         """,
-        should=FAIL,
         xfail="nested fstrings is not yet detected",
+    ),
+    PassingScenario(
+        "nested fstrings with format",
+        """
+        a = 3
+        f'{f"{a}"}'
+        """,
     ),
 ]
 
