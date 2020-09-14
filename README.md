@@ -29,4 +29,4 @@ $ flake8 --version
 
 Rules
 -----
-- **NUF001**: No unecessary f-strings
+- **NUF001**: f-string without interpolation.
